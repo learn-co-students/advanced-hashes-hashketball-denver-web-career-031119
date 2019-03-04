@@ -120,86 +120,81 @@ end
 
 def num_points_scored(players_name)
   game_hash.each do |side, data|
-    data.each do |data_key, data_value|
-       return game_hash[side][data_key][players_name][:points] if data_value.include?(players_name)
+    data.each do |k, v|
+       return game_hash[side][k][players_name][:points] if v.include?(players_name)
       end
   end
 end
 
 def shoe_size(players_name)
-  game_hash.each do |side, data|
-    data.each do |data_key, data_value|
-      return game_hash[side][data_key][players_name][:shoe] if data_value.include?(players_name)
-    end
-  end
+game_hash.each { |side, data|
+  data.each { |k, v|
+    return game_hash[side][k][players_name][:shoe] if v.include?(players_name)
+  }
+}
 end
 
 def team_colors(team_name)
   game_hash.each do |side, data|
-      if game_hash[side].values.include?(team_name)
-        data.each do |data_key, data_value|
-            return data_value if data_key == :colors
-      end
-    end
+    return data[:colors] if data[:team_name] == team_name
   end
 end
 
 def team_names
-  team_array = []
-  game_hash.each do |side, data|
-      data.each do |data_key, data_value|
-        team_array << data_value if data_key == :team_name
-      end
-    end
-  return team_array
+names = []
+game_hash.each do |side, data|
+  names << data[:team_name]
 end
-
+names
+end
 
 def player_numbers(team_name)
   jersey_array = []
   game_hash.each do |side, data|
-    if game_hash[side].values.include?(team_name)
-      data.each do |data_key, data_value|
-        if data_value.is_a?(Hash)
-          data_value.each do |k, v|
-            v.each do |x, y|
-                jersey_array << y.to_i if x == :number
+   if data[:team_name] == team_name
+  data.each do |k, v|
+    if v.is_a?(Hash)
+    v.each do |x,y|
+    jersey_array << y[:number]
             end
           end
         end
       end
     end
-  end
-  return jersey_array
+  jersey_array
 end
 
 def player_stats(players_name)
+  stat_hash = {}
   game_hash.each do |side, data|
-    data.each do |data_key, data_value|
-      return game_hash[side][data_key][players_name] if data_value.include?(players_name)
-    end
-  end
+    data.each do |k, v|
+      if v.is_a?(Hash)
+        v.each do |x, y|
+      if x == players_name
+        stat_hash = y
+end
+end
+end
+end
+end
+stat_hash
 end
 
 
+
 def big_shoe_rebounds
-  player_name = ""
-  shoe_size = 0
+  big = []
   game_hash.each do |side, data|
-    data.each do |data_key, data_value|
-      if data_value.is_a?(Hash)
-        data_value.each do |k, v|
-            v.each do |x, y|
-              if x == :shoe
-                if y > shoe_size
-                  shoe_size = y
-                  player_name = k
-                end
-              end
-            end
-          end
-        return game_hash[side][data_key][player_name][:rebounds]
-      end
-    end
-  end
+  data.each do |k, v|
+    if v.is_a?(Hash)
+    v.each do |x,y|
+      big<< y[:shoe]
+      if y[:shoe] == big.max
+        return y[:rebounds]
+
+end
+end
+end
+end
+end
 end
